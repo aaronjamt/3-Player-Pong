@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install dependencies in Runner Shell
-      run: sudo apt install -y wine
+      run: sudo apt install -y wine-stable
 
     - name: Check Files
       run: ls -la asm/*
