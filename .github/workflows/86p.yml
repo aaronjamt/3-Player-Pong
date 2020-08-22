@@ -24,8 +24,14 @@ jobs:
     - name: Run asm/build.sh
       run: asm/build.sh
 
-    - name: Upload ouput
+    - name: Upload output
       uses: actions/upload-artifact@v2
       with:
         name: Binaries
-        path: asm/out/pongiii.86p
+        path: asm/out
+
+    - name: Upload logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: Logs
+        path: asm/log
