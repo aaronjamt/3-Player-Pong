@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 rm -rf build 2>/dev/null
 mkdir build out 2>/dev/null
 cp src/pongiii.asm build/pongiii.asm
