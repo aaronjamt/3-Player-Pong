@@ -1,5 +1,7 @@
 @echo off
 
+cd asm
+
 rmdir /S /Q build log > nul
 mkdir build out log > nul
 copy /Y src/pongiii.asm build/pongiii.asm
