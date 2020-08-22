@@ -17,6 +17,7 @@ jobs:
 
     - name: Run asm/build.bat
       run: asm/build.bat
+      shell: cmd
 
     - name: Upload output
       uses: actions/upload-artifact@v2
