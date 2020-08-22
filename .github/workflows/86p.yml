@@ -21,7 +21,7 @@ jobs:
     - name: Upload intermediary binary
       uses: actions/upload-artifact@v2
       with:
-        name: tasm
+        name: TASM
         path: asm/build/pongiii.bin
 
   build:
@@ -30,12 +30,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Trim assembly listing
-      run: sed -n -i -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst
+      
+    - name: Download TASM intermediary binary
+      uses: actions/download-artifact@v2
+      with:
+        name: TASM
 
     - name: Run binpac8x
       run: asm/pack.sh
+    
+    - name: Trim assembly listing
+      run: sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
 
     - name: Upload output
       uses: actions/upload-artifact@v2
