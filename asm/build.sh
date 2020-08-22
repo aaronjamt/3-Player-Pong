@@ -10,6 +10,6 @@ wine tasm -80 -i -b build/pongiii.asm build/pongiii.bin 2>log/wine.err | tee log
 sed -n -i -e '/org _asm_exec_ram/,// p' build/pongiii.lst
 echo "===========BINPAC8X==========="
 cd build
-python3 ../binpac8x.py -6 -O PONGTHRE pongiii.bin pongiii.86p >log/binpac8x.log 2| tee log/binpac8x.err
+python3 ../binpac8x.py -6 -O PONGTHRE pongiii.bin pongiii.86p >../log/binpac8x.log 2| tee ../log/binpac8x.err
 mv *.86p ../out
 rm -rf build
