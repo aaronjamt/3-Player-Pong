@@ -30,6 +30,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Trim assembly listing
+      run: sed -n -i -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst
 
     - name: Run binpac8x
       run: asm/pack.sh
