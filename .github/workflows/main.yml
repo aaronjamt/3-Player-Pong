@@ -28,11 +28,11 @@ jobs:
         sudo apt update
         sudo apt install -y wine-stable wine32
 
-    - name: Check Files
-      run: ls -la asm/*
-
     - name: Run asm/build.sh
       run: asm/build.sh
 
-    - name: Check Files
-      run: ls -la asm/*
+    - name: Upload ouput
+      uses: actions/upload-artifact@v2
+      with:
+        name: Binaries
+        path: asm/out/pongiii.86p
