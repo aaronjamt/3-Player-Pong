@@ -47,5 +47,5 @@ jobs:
     - name: Upload output
       uses: actions/upload-artifact@v2
       with:
-        name: Binaries
+        name: Output
         path: asm/out
