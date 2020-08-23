@@ -6,6 +6,6 @@ mkdir build
 dir
 dir src
 dir build
-copy src/pongiii.asm build/pongiii.asm
+copy src\pongiii.asm build\pongiii.asm
 cd tasm
-tasm -80 -i -b ../build/pongiii.asm ../build/pongiii.bin
+tasm -80 -i -b ..\build\pongiii.asm ..\build\pongiii.bin
