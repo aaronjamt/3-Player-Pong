@@ -42,7 +42,12 @@ jobs:
       run: asm/scripts/pack.sh
     
     - name: Trim assembly listing
-      run: sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
+      run: |
+        pwd
+        ls
+        ls asm/build
+        ls asm/out
+        sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
 
     - name: Upload output
       uses: actions/upload-artifact@v2
