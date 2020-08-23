@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
+cd ..
 
 rm -rf build log 2>/dev/null
 mkdir build out log 2>/dev/null
@@ -12,4 +13,5 @@ echo "===========BINPAC8X==========="
 cd build
 python3 ../binpac8x.py -6 -O PONGTHRE pongiii.bin pongiii.86p >../log/binpac8x.log 2| tee ../log/binpac8x.err
 mv *.86p ../out
+cd ..
 rm -rf build
