@@ -19,20 +19,19 @@ hsflag	  = $C135      ; BYTE
 	;ld de,$0001
 
 loop:
-
 	;push de
 	call TryReceive
 	;pop de
-	
+
 	;dec de
 	;ld a,d
 	;or e
 	;cp 0
 	;jp nz,kbd_check
 	;ld de,$2FFF
-	
+
 	;call RedrawDisp
-	
+
 kbd_check:
 	ld a,%10111111
 	out (kbdPort),a
@@ -41,7 +40,7 @@ kbd_check:
 	in a,(kbdPort)
 	bit 6,a
 	jp z,Quit
-	
+
 	ld a,%11111101
 	out (kbdPort),a
 	nop
@@ -53,7 +52,7 @@ kbd_check:
 	push bc
 	ld b,(hl)
 	xor b
-	
+
 	bit 0,a				; Enter
 	push af
 	call nz,EnterKey
@@ -62,7 +61,7 @@ kbd_check:
 	ld hl,LastKeys
 	inc hl
 	ld (hl),c
-	
+
 	ld a,%11111110
 	out (kbdPort),a
 	nop
@@ -73,7 +72,7 @@ kbd_check:
 	push bc
 	ld b,(hl)
 	xor b
-	
+
 	bit 0,a				; Down
 	push af
 	call nz,DownKey
@@ -84,7 +83,7 @@ kbd_check:
 	ld hl,LastKeys
 	ld (hl),c
 	jp loop
-	
+
 DownKey:
 	bit 0,c
 	ret z
@@ -119,7 +118,7 @@ DispEnergy:
 _ClearLoop:
 	call _putc
 	djnz _ClearLoop
-	
+
 	; Calculate beginning column to center text
 	ld hl,Energy+2
 	call AsciiLength
@@ -133,7 +132,7 @@ _ClearLoop:
 	ld a,10
 	sub b
 	ld (_curCol),a
-	
+
 	; Print energy label + value
 	ld hl,Energy_Label
 	call _puts
@@ -152,11 +151,11 @@ ProcessData:
 	pop de
 	ld e,a
 	ret nc
-	
+
 	ld hl,Energy
 	call UpdateInt16
 	call DispEnergy
-	
+
 ; HL = Address of value to update
 ; DE = New value for address
 ; Destroys a, b, c, d, e, h, l
@@ -170,7 +169,7 @@ UpdateInt16:
 	pop hl
 	call AsciiShrink
 	ret
-	
+
 ; Quits the program.
 Quit:
 	res indiconly,(iy+indicflags)
@@ -185,20 +184,20 @@ reset_values:
 	ld hl,Energy
 	ld de,0
 	call UpdateInt16
-	
+
 	ld a,0
 	ld hl,Division_Mod10
 	ld (hl),a
 	inc hl
 	ld (hl),a
 	inc hl
-	
+
 	ld hl,Division_Value
 	ld (hl),a
 	inc hl
 	ld (hl),a
 	inc hl
-	
+
 	ld a,$FF
 	ld (LastKeys),a
 	ld (LastKeys+1),a
