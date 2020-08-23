@@ -4,9 +4,13 @@ DIR="$( pwd )"
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 cd ..
 
-echo "-----RMDIR------"
+echo "----------DEBUG---------"
+pwd
+echo "------------------------"
+ls
+echo "----------DEBUG---------"
+
 rm -rf build
-echo "-----MKDIR------"
 mkdir build out
 
 mv $DIR/pongiii.bin build/pongiii.bin
