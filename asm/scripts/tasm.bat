@@ -1,7 +1,6 @@
 @echo off
 
 cd ..
-
 rmdir /S /Q build 2>nul
 mkdir build 2>nul
 copy src/pongiii.asm build/pongiii.asm
