@@ -1,3 +1,5 @@
+echo on
+
 cd ..
 rmdir /S /Q build 2>nul
 mkdir build 2>nul
