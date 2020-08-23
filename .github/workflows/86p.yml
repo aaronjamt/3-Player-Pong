@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Run TASM
-      run: asm/tasm.bat
+      run: asm\scripts\tasm.bat
       shell: cmd
 
     - name: Upload intermediary binary
@@ -37,7 +37,7 @@ jobs:
         name: TASM
 
     - name: Run binpac8x
-      run: asm/pack.sh
+      run: asm/scripts/pack.sh
     
     - name: Trim assembly listing
       run: sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
