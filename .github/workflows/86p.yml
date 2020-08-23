@@ -39,11 +39,9 @@ jobs:
       with:
         name: TASM
 
-    - name: Run binpac8x
-      run: asm/scripts/pack.sh
-    
-    - name: Trim assembly listing
-      run: |
+    - name: Run binpac8x and trim assembly listing
+      run: | 
+        asm/scripts/pack.sh
         pwd
         ls
         ls asm
