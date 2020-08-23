@@ -15,8 +15,10 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Run TASM
-      run: asm\scripts\tasm.bat
       shell: cmd
+      run: |
+        cd asm\scripts
+        tasm.bat
 
     - name: Upload intermediary binary
       uses: actions/upload-artifact@v2
