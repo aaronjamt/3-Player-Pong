@@ -25,7 +25,9 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: TASM
-        path: asm/build/pongiii.bin
+        path: |
+          asm/build/pongiii.bin
+          asm/build/pongiii.lst
 
   build:
     runs-on: ubuntu-latest
@@ -40,7 +42,7 @@ jobs:
         name: TASM
 
     - name: Run binpac8x and trim assembly listing
-      run: asm/scripts/pack.sh && sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
+      run: asm/scripts/pack.sh && sed -n -e '/org _asm_exec_ram/,// p' pongiii.lst > asm/out/pongiii.lst
 
     - name: Upload output
       uses: actions/upload-artifact@v2
