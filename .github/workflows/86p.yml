@@ -3,10 +3,10 @@ name: Compile .86p On Commit
 on:
   push:
     branches: [ master ]
-    paths: 'asm/**'
+    paths: 'TI-86/**'
   pull_request:
     branches: [ master ]
-    paths: 'asm/**'
+    paths: 'TI-86/**'
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
     - name: Run TASM
       shell: cmd
       run: |
-        cd asm\scripts
+        cd TI-86\scripts
         tasm.bat
 
     - name: Upload intermediary binary
@@ -26,8 +26,8 @@ jobs:
       with:
         name: TASM
         path: |
-          asm/build/pongiii.bin
-          asm/build/pongiii.lst
+          TI-86/build/pongiii.bin
+          TI-86/build/pongiii.lst
 
   build:
     runs-on: ubuntu-latest
@@ -42,10 +42,10 @@ jobs:
         name: TASM
 
     - name: Run binpac8x and trim assembly listing
-      run: asm/scripts/pack.sh && sed -n -e '/org _asm_exec_ram/,// p' pongiii.lst > asm/out/pongiii.lst
+      run: TI-86/scripts/pack.sh && sed -n -e '/org _asm_exec_ram/,// p' pongiii.lst > TI-86/out/pongiii.lst
 
     - name: Upload output
       uses: actions/upload-artifact@v2
       with:
         name: Output
-        path: asm/out
+        path: TI-86/out
