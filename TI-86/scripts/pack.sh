@@ -7,12 +7,6 @@ cd ..
 rm -rf build
 mkdir build out
 
-echo "----------DEBUG---------"
-pwd
-echo "------------------------"
-ls
-echo "----------DEBUG---------"
-
 mv $DIR/pongiii.bin build/pongiii.bin
 
 cd build
