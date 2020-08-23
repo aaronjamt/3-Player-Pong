@@ -4,4 +4,4 @@
 killall nc >/dev/null 2>&1
 killall tilp >/dev/null 2>&1
 # Upload
-tilp --calc TI86 --cable GrayLink -p 1 -n out/pongiii.86p 
+tilp --calc TI86 --cable GrayLink -p 1 -n out/pongiii.86p
