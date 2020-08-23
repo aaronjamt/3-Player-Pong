@@ -45,8 +45,8 @@ jobs:
       run: |
         pwd
         ls
-        ls asm/build
-        ls asm/out
+        ls asm
+        ls asm/*
         sed -n -e '/org _asm_exec_ram/,// p' asm/build/pongiii.lst > asm/out/pongiii.lst
 
     - name: Upload output
