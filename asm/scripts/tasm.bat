@@ -1,10 +1,10 @@
-echo on
+@echo off
+
+set TASMTABS=%CD%
 
 cd ..
 rmdir /S /Q build
 mkdir build
-dir
-dir src
-dir build
 copy src\pongiii.asm build\pongiii.asm
+
 tasm\tasm -80 -i -b build\pongiii.asm build\pongiii.bin
