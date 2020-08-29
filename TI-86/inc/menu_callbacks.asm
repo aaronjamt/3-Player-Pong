@@ -6,7 +6,7 @@ OptionAExec:
 	dec hl
 	inc de
 	call UpdateInt16
-	call DispEnergy
+	call DispStatus
 	ret
 	
 OptionBExec:
@@ -17,7 +17,7 @@ OptionBExec:
 	dec hl
 	dec de
 	call UpdateInt16
-	call DispEnergy
+	call DispStatus
 	ret
 	
 OptionNextExec:
