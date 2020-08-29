@@ -108,7 +108,7 @@ RedrawDisp:
 	ret
 
 ; Destroys h, l
-DispEnergy:
+DispStatus:
 	; Clear top line of display
 	ld a,0
 	ld (_curRow),a
@@ -118,7 +118,19 @@ DispEnergy:
 _ClearLoop:
 	call _putc
 	djnz _ClearLoop
-
+	
+	ld a,0
+	ld (_curCol),a
+	ld hl,Player1Score+2
+	call _puts
+	
+	ld hl,Player2Score+2
+	call AsciiLength
+	ld a,20
+  sub b
+  ld (_curCol),a
+  call _puts
+  
 	; Calculate beginning column to center text
 	ld hl,Energy+2
 	call AsciiLength
@@ -144,17 +156,45 @@ _ClearLoop:
 ; This will process the data in the Accumulator from TryReceive
 ; and possibly call ReceiveByte to fetch all the data.
 ProcessData:
+  cp 01
+  jp z,ReceiveEnergy
+  cp 02
+  jp z,ReceiveScore1
+  cp 03
+  jp z,ReceiveScore2
+  ret
+
+ReceiveEnergy:
+  call ReceiveByte
+  ret nc
 	ld d,a
 	ld e,0
 	push de
 	call ReceiveByte
 	pop de
-	ld e,a
 	ret nc
+	ld e,a
 
 	ld hl,Energy
 	call UpdateInt16
 	call DispEnergy
+  ret
+  
+ReceiveScore1:
+  call ReceiveByte
+  ret nc
+	ld d,a
+	ld e,0
+	push de
+	call ReceiveByte
+	pop de
+	ret nc
+	ld e,a
+	
+	ld hl,Player1Score
+	call UpdateInt16
+	call DispStats
+	ret
 
 ; HL = Address of value to update
 ; DE = New value for address
@@ -211,8 +251,14 @@ Energy:
 	.db 00h, 00h		; Allocate 2 bytes (16 bits) for energy counter. Stored as an uint16 in (high byte, low byte) format.
 	.db "00000",0		; Allocate 5 bytes (plus null) in ASCII format for _puts. This will be calculated whenever the value
 						; is updated to save time when it's needed for _puts.
+Player1Score:
+  .db 00h, 00h    ; See Energy for infomation on the format
+  .db "00000", 0
+Player2Score:
+  .db 00h, 00h    ; See Energy for infomation on the format
+  .db "00000", 0
 Energy_Label:
-	.db "Energy:",0
+	.db "$",0
 LastKeys:
 	.db $FF, $FF		; All binary 1's (aka $FF) = no keys pressed. All 0's ($00) would mean all keys pressed.
 
