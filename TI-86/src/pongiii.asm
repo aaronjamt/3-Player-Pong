@@ -103,7 +103,7 @@ EnterKey:
 	ret
 
 RedrawDisp:
-	call DispEnergy
+	call DispStatus
 	call DispMenu
 	ret
 
@@ -160,8 +160,8 @@ ProcessData:
   jp z,ReceiveEnergy
   cp 02
   jp z,ReceiveScore1
-  cp 03
-  jp z,ReceiveScore2
+  ;cp 03
+  ;jp z,ReceiveScore2
   ret
 
 ReceiveEnergy:
@@ -177,7 +177,7 @@ ReceiveEnergy:
 
 	ld hl,Energy
 	call UpdateInt16
-	call DispEnergy
+	call DispStatus
   ret
   
 ReceiveScore1:
@@ -193,7 +193,7 @@ ReceiveScore1:
 	
 	ld hl,Player1Score
 	call UpdateInt16
-	call DispStats
+	call DispStatus
 	ret
 
 ; HL = Address of value to update
