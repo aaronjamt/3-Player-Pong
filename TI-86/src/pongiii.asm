@@ -160,8 +160,8 @@ ProcessData:
 	jp z,ReceiveEnergy
 	cp 02
 	jp z,ReceiveScore1
-	;cp 03
-	;jp z,ReceiveScore2
+	cp 03
+	jp z,ReceiveScore2
 	ret
 
 ReceiveEnergy:
@@ -192,6 +192,22 @@ ReceiveScore1:
 	ld e,a
 	
 	ld hl,Player1Score
+	call UpdateInt16
+	call DispStatus
+	ret
+
+ReceiveScore2:
+	call ReceiveByte
+	ret nc
+	ld d,a
+	ld e,0
+	push de
+	call ReceiveByte
+	pop de
+	ret nc
+	ld e,a
+	
+	ld hl,Player2Score
 	call UpdateInt16
 	call DispStatus
 	ret
