@@ -129,6 +129,7 @@ _ClearLoop:
 	ld a,20
 	sub b
 	ld (_curCol),a
+	ld hl,Player2Score+2
 	call _puts
   
 	; Calculate beginning column to center text
