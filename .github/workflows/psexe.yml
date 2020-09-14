@@ -16,7 +16,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
-      submodules: true
+      with:
+        submodules: true
   
 #    - name: Set ownership
 #      run: sudo chown `id -un`:`id -gn` -R /home/runner/*
