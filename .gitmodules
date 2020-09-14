@@ -1,3 +1,3 @@
-[submodule "PSX/PSn00bSDK"]
-	path = PSX/PSn00bSDK
+[submodule "PSX/PSn00bSDK/PSn00bSDK"]
+	path = PSX/PSn00bSDK/PSn00bSDK
 	url = https://github.com/Lameguy64/PSn00bSDK
