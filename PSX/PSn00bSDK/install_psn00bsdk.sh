@@ -169,5 +169,7 @@ cd "$ROOT"
 
 echo "Creating env.source..."
 echo "export PATH=\$PATH:$PATHS" > env.source
+echo "export GCC_BASE=$PREFIX" >> env.source
+echo "export LIBPSN00B=$ROOT/PSn00bSDK/libpsn00b" >> env.source
 
 echo "Installed! Run 'source $ROOT/env.source' or 'source env.source' when in '$ROOT' to apply environment variables!"
