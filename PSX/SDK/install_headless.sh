@@ -1,6 +1,9 @@
 #!/bin/bash
 pwd
-find / -type d | grep 3-Player-Pong
+ls
+ls *
+find /home/runner -type d 2>/dev/null | grep 3-Player-Pong
+
 ROOT="`pwd`"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PREFIX="$ROOT/mipsel-unknown-elf"
