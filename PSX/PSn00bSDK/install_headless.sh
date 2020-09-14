@@ -1,5 +1,6 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT="`pwd`"
 PREFIX="$ROOT/mipsel-unknown-elf"
 PATHS="$PREFIX/bin"
@@ -91,16 +92,17 @@ EOF
 }
 
 compile_or_locate_toolchain() {
-    if [ -d "$PREFIX" ]; then
-        PATHS="$PREFIX/bin"
-    else
+    if [ ! -d "$PREFIX" ]; then
         compile_toolchain
     fi
+    PATHS="$PATHS:$PREFIX/bin"
 }
 
 if [ "`uname -m`" = "x86_64" ]; then
     cd "$ROOT"
-    tar -xzf "toolchains/mipsel-unknown-elf_`uname -m`.tar.gz"
+    tar -xzf "$DIR/toolchains/mipsel-unknown-elf_`uname -m`.tar.gz"
+else
+    compile_or_locate_toolchain
 fi
 
 cd "$ROOT"
