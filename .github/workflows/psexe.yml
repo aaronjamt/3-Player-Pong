@@ -15,11 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-  
-    - name: Test
-      run: |
-        ldconfig -p | grep mpfr
-        sudo apt list | grep libmpfr
       
     - name: Prepare SDK
       run: cd PSX/PSn00bSDK && ./install_headless.sh
