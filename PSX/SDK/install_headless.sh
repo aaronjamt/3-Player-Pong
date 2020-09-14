@@ -119,6 +119,7 @@ fi
 if [ ! -d "PSn00bSDK/tools/bin" ]; then
     echo "Compiling PSn00bSDK tools..."
     cd PSn00bSDK/tools
+    ls -l *
     remake -j4
     remake -j4 install
     PATHS="$PATHS:$PWD/bin"
