@@ -119,7 +119,7 @@ fi
 echo "----------"
 echo "$ROOT"
 echo "----------"
-ls "$ROOT"
+ls "$ROOT/*"
 echo "----------"
 ls "$ROOT/PSn00bSDK"
 echo "----------"
