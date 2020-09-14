@@ -1,5 +1,6 @@
 #!/bin/bash
-
+pwd
+find / -type d | grep 3-Player-Pong
 ROOT="`pwd`"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PREFIX="$ROOT/mipsel-unknown-elf"
@@ -115,14 +116,6 @@ if [ ! -d "PSn00bSDK" ]; then
     echo "Downloading PSn00bSDK..."
     git clone "https://github.com/Lameguy64/PSn00bSDK"
 fi
-
-echo "----------"
-pwd
-echo "----------"
-ls "*"
-echo "----------"
-ls "PSn00bSDK"
-echo "----------"
 
 if [ ! -d "PSn00bSDK/tools/bin" ]; then
     echo "Compiling PSn00bSDK tools..."
