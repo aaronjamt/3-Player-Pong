@@ -1,0 +1,29 @@
+name: Compile PS-EXE On Commit
+
+on:
+  push:
+    branches: [ master ]
+    paths: 'PSX/**'
+  pull_request:
+    branches: [ master ]
+    paths: 'PSX/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Prepare SDK
+      run: PSX/PSn00bSDK/install_headless.sh
+
+    - name: Compile
+      run: PSX/compile.sh
+
+    - name: Upload output
+      uses: actions/upload-artifact@v2
+      with:
+        name: Output
+        path: PSX/out
