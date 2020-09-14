@@ -116,6 +116,14 @@ if [ ! -d "PSn00bSDK" ]; then
     git clone "https://github.com/Lameguy64/PSn00bSDK"
 fi
 
+echo "----------"
+echo "$ROOT"
+echo "----------"
+ls "$ROOT"
+echo "----------"
+ls "$ROOT/PSn00bSDK"
+echo "----------"
+
 if [ ! -d "PSn00bSDK/tools/bin" ]; then
     echo "Compiling PSn00bSDK tools..."
     cd PSn00bSDK/tools
