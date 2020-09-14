@@ -20,7 +20,7 @@ jobs:
       run: cd PSX/SDK && scripts/install_headless.sh
 
     - name: Compile
-      run: PSX/scripts/compile.sh
+      run: source PSX/SDK/env.source && PSX/scripts/compile.sh
 
     - name: Upload output
       uses: actions/upload-artifact@v2
