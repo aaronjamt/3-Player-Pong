@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Prepare SDK
-      run: cd PSX/PSn00bSDK && ./install_headless.sh
+      run: cd PSX/SDK && ./install_headless.sh
 
     - name: Compile
       run: PSX/compile.sh
