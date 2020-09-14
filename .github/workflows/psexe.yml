@@ -16,9 +16,10 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      submodules: true
   
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+#    - name: Set ownership
+#      run: sudo chown `id -un`:`id -gn` -R /home/runner/*
 
     - name: Prepare SDK
       run: cd PSX/SDK && ./install_headless.sh
