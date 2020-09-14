@@ -14,7 +14,7 @@ sudo $apt install -y tar gcc make remake perl wget git texinfo lib{mpfr,isl,gmp,
 
 # libmpfr4 is required, however some systems (notably Ubuntu 18.04) have removed it.
 # This hack allows libmpfr6 (which is compatible enough) to act in place.
-sudo $apt install -y libmpfr4 || sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /usr/lib/x86_64-linux-gnu/libmpfr.so.4
+sudo $apt install -y libmpfr4 2>/dev/null || sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /usr/lib/x86_64-linux-gnu/libmpfr.so.4
 
 compile_toolchain() {
     mkdir build $PREFIX
@@ -117,11 +117,11 @@ if [ ! -d "PSn00bSDK" ]; then
 fi
 
 echo "----------"
-echo "$ROOT"
+pwd
 echo "----------"
-ls "$ROOT/*"
+ls "*"
 echo "----------"
-ls "$ROOT/PSn00bSDK"
+ls "PSn00bSDK"
 echo "----------"
 
 if [ ! -d "PSn00bSDK/tools/bin" ]; then
