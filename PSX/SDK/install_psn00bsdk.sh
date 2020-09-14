@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT="`pwd`"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PREFIX="$ROOT/mipsel-unknown-elf"
 PATHS="$PREFIX/bin"
 
@@ -96,17 +96,32 @@ EOF
 }
 
 compile_or_locate_toolchain() {
-    if [ ! -d "$PREFIX" ]; then
+    read -p "Do you want to compile the toolchain? [Y/n] "
+    if [ "$REPLY" = "n" ]; then
+        read -p "Where is your mipsel-unknown-elf toolchain located (AKA prefix)? [$PREFIX] "
+        if [ "$REPLY" = "" ]; then
+            REPLY="$PREFIX"
+        fi
+        if [ -d "$REPLY" ]; then
+            PREFIX="$REPLY"
+        else
+            echo "'$REPLY' is not a directory." >&2
+            exit 1
+        fi
+        PATHS="$PREFIX/bin"
+    else
         compile_toolchain
     fi
-    PATHS="$PATHS:$PREFIX/bin"
 }
 
 if [ "`uname -m`" = "x86_64" ]; then
-    cd "$ROOT"
-    tar -xzf "$DIR/toolchains/mipsel-unknown-elf_`uname -m`.tar.gz"
-else
-    compile_or_locate_toolchain
+    read -p "Precompiled toolchain available. Do you want to use it? [Y/n] "
+    if [ "$REPLY" = "n" ]; then
+        compile_or_locate_toolchain
+    else
+        cd "$ROOT"
+        tar -xzf "$DIR/toolchains/mipsel-unknown-elf_`uname -m`.tar.gz"
+    fi
 fi
 
 cd "$ROOT"
@@ -158,9 +173,8 @@ EOF
 cd "$ROOT"
 
 echo "Creating env.source..."
-echo "export PATH=\$PATH:$PATHS:$DIR" > env.source
+echo "export PATH=\$PATH:$PATHS:$DIR/scripts" > env.source
 echo "export GCC_BASE=$PREFIX" >> env.source
 echo "export LIBPSN00B=$ROOT/PSn00bSDK/libpsn00b" >> env.source
-source env.source
 
-echo "Installed!"
+echo "Installed! Run 'source $ROOT/env.source' or 'source env.source' when in '$ROOT' to apply environment variables!"

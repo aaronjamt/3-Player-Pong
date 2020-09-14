@@ -17,10 +17,10 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Prepare SDK
-      run: cd PSX/SDK && scripts/install_headless.sh
+      run: cd PSX/SDK && ./install_headless.sh
 
     - name: Compile
-      run: PSX/scripts/compile.sh
+      run: PSX/compile.sh
 
     - name: Upload output
       uses: actions/upload-artifact@v2
