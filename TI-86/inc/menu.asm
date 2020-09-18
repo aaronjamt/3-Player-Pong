@@ -1,11 +1,34 @@
 DispMenu:
+	call ClearMenu							; Clears the menu area (prevents longer text poking out)
+
 	ld a,0									; Set current row to 0 (AKA top line) and column to 0
 	ld (_curRow),a							; (AKA beginning of line)
-	ld a,0									; ...
 	ld (_curCol),a							; ...
 	
 	call CalculateMenuAddr					; Calculate which menu to display by ID
 	call DispMenuLine						; Display calculated menu
+	ret
+
+; Clears the space for the menu
+ClearMenu:
+	ld a,0					; First colunm, second row
+	ld (_curCol),a			; ...
+	ld a,1					; ...
+	ld (_curRow),a			; ...
+	ld b,7					; Outer loop runs 7 times
+_ClearLoopOuter:
+	ld a,0					; Begining of line
+	ld (_curCol),a			; ...
+	ld a,b
+	ld (_curRow),a			; Move to the next line (Bottom to top)
+	ld c,b					; Store B register in C
+	ld b,20					; Inner loop runs 19 times
+	ld a,' '				; Using spaces
+_ClearLoopInner:
+	call _putc				; Put a space
+	djnz _ClearLoopInner	; Loop (inner)
+	ld b,c					; Inner loop finished, get the outer loop counter
+	djnz _ClearLoopOuter	; Loop (outer)
 	ret
 	
 ; Calculates the address of the current menu's lookup table.
@@ -16,20 +39,25 @@ DispMenu:
 CalculateMenuAddr:
 	ld a,(MenuOption)
 	
-	and %11111000							; Get current menu id
-	srl a									; Shift right 3 times to compensate for the and,
-	srl a									; then left once to double it for the add later.
-											; It evens out to 2 `srl`s
+	and %11111000				; Get current menu id
+	srl a						; Shift right 3 times to compensate for the `and`
+	srl a						; since this value is the upper 5 bits of the byte.
+	srl a						; `srl` shifts the register right
 	ld hl,MenuOptionsTable
 _MenuLookupLoop:
 	cp 0
 	jp z,_MenuLookupFound
-	ld b,a
-	ld a,h
-	or l
-	cp 0
-	jp z,_MenuLookupInvalid
-	inc hl
+	ld b,a						; Save A register for later
+	ld a,(hl)					; Get value at address (HL)		
+	cp 0						; Compare with 0
+	jp z,_MenuLookupInvalid		; Value is 0, invalid (AKA end of table)
+
+	inc hl						; Increment HL, check this byte
+	ld a,(hl)					; Get value at address (HL)		
+	cp 0						; Compare with 0
+	jp z,_MenuLookupInvalid		; Value is 0, invalid (AKA end of table)
+	ld a,b						; Retrieve A register value (Both bytes are valid)
+	inc hl						; Increment HL (each element is 2 bytes)
 	dec a
 	jp _MenuLookupLoop
 _MenuLookupFound:
@@ -46,6 +74,7 @@ _MenuLookupInvalid:
 	ld a,(MenuOption)
 	and %00000111
 	ld (MenuOption),a
+	ld hl,MenuOptionsTable
 	jp _MenuLookupFound
 
 ; Displays an option for the menu.
@@ -159,7 +188,7 @@ MenuTryDown:
 	;ld b,c							; flags. With it, we only need to check the carry.
 	inc a							; Moves the cursor down and checks if it is still valid
 	cp b							; ...
-	ret nc							; If carry set, (current option+1) > length, so don't save
+	jp nc,MenuTop					; If carry set, (current option+1) > length, so wrap to top
 	ld b,a
 	ld a,(MenuOption)				; Otherwise, add menu ID back, save changes to MenuOption,
 	ld c,%11111000					; call DispMenu to redraw the menu, and ret.
@@ -177,7 +206,7 @@ MenuTryUp:
 	ld b,%00000111
 	and b
 	cp 0
-	ret z
+	jp z,MenuBottom
 	dec a
 	ld c,a
 	ld a,(MenuOption)
@@ -186,6 +215,44 @@ MenuTryUp:
 	or c
 	ld (MenuOption),a
 	call DispMenu
+	ret
+
+; Moves the cursor to the top of the menu. Used for wraparound.
+; Destroys A, B
+; Super simple since top=0
+MenuTop:
+	ld a,(MenuOption)
+	ld b,%11111000
+	and b
+	ld (MenuOption),a
+	call DispMenu
+	ret
+
+; Moves the cursor to the bottom of the menu. Used for wraparound.
+; Destroys A
+MenuBottom:
+	push BC							; This would destroy so many registers, so may as well
+	push DE							; implement push/pop to mitigiate that somewhat.
+	push HL							; ...
+
+	call CalculateMenuAddr			; Finds the starting address of the current menu, puts it in HL
+	call CalculateMenuLength		; Uses the address to find the length or max ID, puts it in B
+	ld a,b							; Only want bottom 3 bits
+	ld b,%00000111					; ...
+	and b							; ...
+	ld b,1							; The length of the menu is 1-indexed, while the
+	sub b							; ID of the item is 0-indexed, so subtract 1.
+	ld c,a							; Save so we can use it later
+	ld a,(MenuOption)				; Get the current MenuOption
+	ld b,%11111000					; Keep only the Menu #, not the Cursor Position
+	and b							; ...
+	add a,c							; Add the length of the menu
+	ld (MenuOption),a				; Save to (MenuOption)
+	call DispMenu
+
+	pop HL							; This would destroy so many registers, so may as well
+	pop DE							; implement push/pop to mitigiate that somewhat.
+	pop BC							; ...
 	ret
 
 MenuSelectOption:
@@ -201,6 +268,7 @@ _MenuSelectLoop:
 	inc hl
 	jp _MenuSelectLoop
 _MenuSelectItem:
+	; This section gets the address of the menu item's callback (don't ask)
 	ld e,(hl)
 	inc hl
 	ld d,(hl)
@@ -211,8 +279,11 @@ _MenuSelectItem:
 	ld d,(hl)
 	ld h,d
 	ld l,e
-	jp (hl)
-	ret
+	; End of section
+	ld de,RedrawDisp			; Need to RedrawDisp after callback, so push it to the stack and then when
+	push de						; the callback RETs, it will go to RedrawDisp, which will ret back to main loop
+	jp (hl)						; Jump to the callback
+	ret							; Shouldn't ever get here, but just in case...
 
-#include "inc/menu_values.asm"
-#include "inc/menu_callbacks.asm"
+#include "../inc/menu_values.asm"
+#include "../inc/menu_callbacks.asm"

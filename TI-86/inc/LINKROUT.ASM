@@ -1,13 +1,6 @@
-;
-; SOME VERY NICE LINK ROUTINES MADE BY PASCAL BOURON
-;
-; I've made some modifications so it fits ZTetris
-;
-
 TryReceive:
 	in A,(7)
 	and 3
-;	and 1			;DEBUG
 	cp 3
 	jp nz,recv
 	ret
@@ -16,98 +9,114 @@ recv:
 	call c,ProcessData ; Defined in main file
 	ret
 
+;======================================================
+; ReceiveByte                 [Assembly Coder's Zenith]
+;  Originally by Pascal Bouron and Jimmy Mardell
+;
+; out: A = received byte    carry set = error
+; destroyed: all registers, OP1
+;======================================================
 ReceiveByte:
-	ld hl,0
-	ld (lcounter),hl
-
-	ld e,1
-	ld c,0					; byte receive
-	ld b,8					; counter
-	ld a,$C0
-	out (7),a
+ ld hl,0
+ ld (_OP1),hl
+ ld 	 e,1			 ; for the OR
+ ld 	 c,0			 ; byte receive
+ ld 	 b,8			 ; counter
+ ld 	 a,$C0
+ out	 (7),a
 rb_w_Start:
-	push de
-	ld de,$07FF				; timeout
-timeoutloop1:
-	dec de
-	ld a,d
-	or e
-	cp 0
-	jp z,timeout
-	in a,(7)
-	and 3
-;	and 1			;DEBUG
-	cp 3
-	jr nz,rb_get_bit
-	jr timeoutloop1
+ in 	 a,(7)
+ and 3
+ cp  3
+ jr 	 nz,rb_get_bit
+ call rbTest_ON
+ jr 	 rb_w_Start
 rb_get_bit:
-	pop de
-	cp 2
-	jr z,rb_receive_zero
-	ld a,c
-	or e
-	ld c,a
-	ld a,$D4
-	out (7),a
-	jr rb_waitStop
+ cp 	 2
+ jr 	 z,rb_receive_zero
+ ld 	 a,c
+ or 	 e
+ ld 	 c,a
+ ld 	 a,$D4
+ out	 (7),a
+ jr 	 rb_waitStop
 rb_receive_zero:
-	ld a,$E8
-	out (7),a
+ ld 	 a,$E8
+ out	 (7),a
 rb_waitStop:
-	ld d,$FF				; timeout
-timeoutloop2:
-	dec d
-	ld a,d
-	cp 0
-	jp z,timeout
-	in a,(7)
-	and 3
-	jr z,timeoutloop2
-	ld a,$c0
-	out (7),a
-	rl e
-	djnz rb_w_Start
-	ld a,c
-	scf
-	ret
-timeout:
-	ld a,$ff
-	ccf
-	ret
+ call rbTest_ON
+ in 	 a,(7)
+ and	 3
+ jr 	 z,rb_waitStop
+ ld 	 a,$c0
+ out	 (7),a
+ rl 	 e
+ djnz 	 rb_w_Start
+ ld 	 a,c
+ ret
+rbTest_ON:
+ ld a,(_OP1)
+ inc a
+ ld (_OP1),a
+ cp 255
+ ret nz
+ pop hl  ;Back to the place you were before.	Gotta love it!
+ xor a
+ ret
 
+;======================================================
+; SendByte                 	  [Assembly Coder's Zenith]
+;  Originally by Pascal Bouron and Jimmy Mardell
+;
+; in: A = byte to send
+; out: carry set = error
+; destroyed: all registers, OP1
+;======================================================
 SendByte:
-	ld hl,0
-	ld (lcounter),hl
-	ld b,8
-	ld (sbyte),a
-	ld c,a			;byte to send
-	ld a,$C0
-	out (7),a
-w_setport3:
-	in a,(7)
-	and 3
-	cp 3
-	jr z,calc_bit
-	jr w_setport3
-calc_bit:
-	ld a,c
-	and 1
-	jr z,send_one
-send_zero:
-	ld a,$E8
-	out (7),A
-	jr wait_setport
-send_one:
-	ld a,$D4
-	out (7),A
-wait_setport:
-	in a,(7)
-	and 3
-	jr nz,wait_setport
-	ld a,$C0
-	out (7),A
-	srl c
-	djnz w_setport3
-	xor a
-	ld (sbyte),a
-	ret
+ ld hl,0
+ ld (_OP1),hl
+ ld 	 b,8
+ ld 	 c,a			 ;byte to send
+ ld 	 a,$C0
+ out	 (7),a
+sbw_setport3:
+ in 	 a,(7)
+ and 3
+ cp  3
+ jr 	 z,sbcalc_bit
+ call sbSendTest_ON
+ jr 	 sbw_setport3
+sbcalc_bit:
+ ld 	 a,c
+ and	 1
+ jr 	 z,sbsend_one
+sbsend_zero:
+ ld 	 a,$E8
+ out	 (7),A
+ jr 	 sbwait_setport
+sbsend_one:
+ ld 	 a,$D4
+ out	 (7),A
+sbwait_setport:
+ call sbSendTest_ON
+ in 	 a,(7)
+ and	 3
+ jr 	 nz,sbwait_setport
+ ld 	 a,$C0
+ out	 (7),A
+ srl c
+ djnz sbw_setport3
+ xor a
+ ret
+sbSendTest_ON:
+ ld a,%00111111
+ out (1),a
+ nop
+ nop
+ in a,(1)
+ bit 6,a
+ ret nz
+ pop hl
+; pop hl		; instead of returning, jump to
+; jp Quit		; some program exit code
+ ret

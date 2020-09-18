@@ -1,1 +1,6 @@
 PSX/build
+PSX/SDK/PSn00bSDK/**
+PSX/SDK/mipsel-unknown-elf
+PSX/SDK/env.source
+**.86p
+**.lst

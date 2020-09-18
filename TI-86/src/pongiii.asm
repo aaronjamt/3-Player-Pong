@@ -1,5 +1,4 @@
-;#include "inc/ti86asm.inc"
-#include "inc/ultimate86.inc"
+#include "../inc/ultimate86.inc"
 
 lcounter  = $C130      ; WORD
 
@@ -260,9 +259,9 @@ reset_values:
 	ld (LastKeys+1),a
 	ret
 
-#include "inc/ascii.asm"
-#include "inc/menu.asm"
-#include "inc/linkrout.asm"
+#include "../inc/ascii.asm"
+#include "../inc/menu.asm"
+#include "../inc/linkrout.asm"
 
 Energy:
 	.db 00h, 00h		; Allocate 2 bytes (16 bits) for energy counter. Stored as an uint16 in (high byte, low byte) format.
