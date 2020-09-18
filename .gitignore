@@ -4,3 +4,6 @@ PSX/SDK/mipsel-unknown-elf
 PSX/SDK/env.source
 **.86p
 **.lst
+PSX/out/3-Player-Pong.exe
+PSX/src/3-player-pong.elf
+**.o
