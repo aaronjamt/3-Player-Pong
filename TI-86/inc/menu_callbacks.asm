@@ -42,6 +42,16 @@ PaddleModExec:
 	ld (MenuOption),a
 	ret
 
+SlowLeftPaddleExec:
+	ld a,$1
+	call SendByte
+	ret
+
+SlowRightPaddleExec:
+	ld a,$2
+	call SendByte
+	ret
+
 BallModExec:
 	ld a,%00010000
 	ld (MenuOption),a
