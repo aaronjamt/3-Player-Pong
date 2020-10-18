@@ -30,29 +30,29 @@ MainMenuOption:
 	.dw MainMenuExec
 	.db " Back to Main Menu  ",0
 
-	PaddleModOption:
-		.dw PaddleModExec
-		.db " Paddle Modifiers   ",0
+PaddleModOption:
+	.dw PaddleModExec
+	.db " Paddle Modifiers   ",0
 
-		SlowLeftPaddleOption:
-			.dw SlowLeftPaddleExec
-			.db " Slow Left Paddle   ",0
+SlowLeftPaddleOption:
+	.dw SlowLeftPaddleExec
+	.db " Slow Left Paddle   ",0
 
-		SlowRightPaddleOption:
-			.dw SlowRightPaddleExec
-			.db " Slow Right Paddle   ",0
+SlowRightPaddleOption:
+	.dw SlowRightPaddleExec
+	.db " Slow Right Paddle   ",0
 
-	BallModOption:
-		.dw BallModExec
-		.db " Ball Modifiers     ",0
+BallModOption:
+	.dw BallModExec
+	.db " Ball Modifiers     ",0
 
-	ScoreModOption:
-		.dw ScoreModExec
-		.db " Score Modifiers    ",0
+ScoreModOption:
+	.dw ScoreModExec
+	.db " Score Modifiers    ",0
 
-	DispModOption:
-		.dw DispModExec
-		.db " Display Modifiers  ",0
+DispModOption:
+	.dw DispModExec
+	.db " Display Modifiers  ",0
 
 MenuOptionA:
 	.dw OptionAExec
