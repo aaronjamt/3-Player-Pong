@@ -75,14 +75,14 @@ void _sioCallback() {
 	checkCmd();
 }
 
-///////////////////////////////////////////////////////////
-// Random Number Generator
-// --------------------------------------------------------
-// returns a random number that does
-// not exceed the maximum parsed value
-// --------------------------------------------------------
-// EG: Random(5) will return either 0,1,2,3 or 4
-///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// Random Number Generator                                  //
+// -------------------------------------------------------- //
+// returns a random number that does                        //
+// not exceed the maximum parsed value                      //
+// -------------------------------------------------------- //
+// EG: Random(5) will return either 0,1,2,3 or 4            //
+//////////////////////////////////////////////////////////////
 int Random(int max)
 {
 	srand(GetRCnt(0)); // initialise the random seed generator
@@ -92,36 +92,36 @@ int Random(int max)
 void TurnOnAnalog(void)
 {
 	EnterCriticalSection();
-	
+
 	// Enter configuration mode
 	_PadSetPort(0);
-	
+
 	if( _PadExchng(0x01) & 0x100 )
 	{
 		ExitCriticalSection();
 		return;
 	}
-	
+
 	if( _PadExchng(0x43) & 0x100 )
 	{
 		ExitCriticalSection();
 		return;
 	}
-	
+
 	_PadExchng(0x00);
 	_PadExchng(0x01);
-	
+
 	while( !(_PadExchng(0) & 0x100) );
-	
+
 	_PadSetPort(2);
-	
+
 	ExitCriticalSection();
 	VSync(0);
 	EnterCriticalSection();
-	
+
 	// Set analog state
 	_PadSetPort(0);
-	
+
 	_PadExchng(0x01);
 	_PadExchng(0x44);
 	_PadExchng(0x00);
@@ -131,23 +131,23 @@ void TurnOnAnalog(void)
 	while( !(_PadExchng(0) & 0x100) );
 
 	_PadSetPort(2);
-	
+
 	ExitCriticalSection();
 	VSync(0);
 	EnterCriticalSection();
-	
+
 	// Exit configuration mode
 	_PadSetPort(0);
-		
+
 	_PadExchng(0x01);
 	_PadExchng(0x43);
 	_PadExchng(0x00);
 	_PadExchng(0x00);
-	
+
 	while( !(_PadExchng(0) & 0x100) );
-	
+
 	_PadSetPort(2);
-	
+
 	ExitCriticalSection();
 	VSync(0);
 }
@@ -162,33 +162,33 @@ void init(void)
 	/* Initialize Serial I/O */
 	AddSIO(115200);
 	Sio1Callback(_sioCallback);
-	
+
 	// Define display environments, first on top and second on bottom
 	SetDefDispEnv(&disp[0], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetDefDispEnv(&disp[1], 0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+
 	// Define drawing environments, first on bottom and second on top
 	SetDefDrawEnv(&draw[0], 0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetDefDrawEnv(&draw[1], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+
 	// Set and enable clear color
 	setRGB0(&draw[0], 0, 96, 0);
 	setRGB0(&draw[1], 0, 96, 0);
 	draw[0].isbg = 1;
 	draw[1].isbg = 1;
-	
+
 	// Clear double buffer counter
 	db = 0;
-	
+
 	// Apply the GPU environments
 	PutDispEnv(&disp[db]);
 	PutDrawEnv(&draw[db]);
-	
+
 	// Load test font
 	FntLoad(960, 0);
-	
+
 	FntOpen(0, 8, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 128);
-	
+
 	/* Initialize Pads (Controllers) */
 	InitPAD(padbuff[0], 34, padbuff[1], 34);
 	StartPAD();
@@ -304,7 +304,7 @@ void movePaddle(Vector2* paddle, PADTYPE* pad) {
 
 // Display function
 void display()
-{	
+{
 	setTile(&tile);
 
 	setWH(&tile, BALL_DIAMETER, BALL_DIAMETER);
@@ -327,43 +327,43 @@ void display()
 
 	// Flip buffer index
 	db = !db;
-	
+
 	// Wait for all drawing to complete
 	DrawSync(0);
-	
+
 	// Wait for vertical sync to cap the logic to 60fps (or 50 in PAL mode)
 	// and prevent screen tearing
 	VSync(0);
 
-	// Switch pages	
+	// Switch pages
 	PutDispEnv(&disp[db]);
 	PutDrawEnv(&draw[db]);
-	
+
 	// Enable display output, ResetGraph() disables it by default
 	SetDispMask(1);
-	
+
 }
 
 int main(int argc, const char *argv[])
 {
 	init();
-	
+
 	unsigned int init_cooldown = 50; // Cooldown before processing controller input
 	unsigned short btn = 0;
 	unsigned short lastBtn = 0;
 	PADTYPE* pad;
-	
+
 	unsigned int counter = 0;
 	unsigned short energy_counter = 0;
-	
+
 	while (true) {
+/*
 		if (init_cooldown == 0) {
 			lastBtn = btn;
 			pad = ((PADTYPE*)padbuff[0]);
 			btn = ~pad->btn;
-			
 		}
-
+*/
 		if (game_start_delay == 0 && energy_counter >= 50) {
 			energy++;
 			energy_counter = 0;
@@ -379,10 +379,10 @@ int main(int argc, const char *argv[])
 		FntPrint(-1, "1234567890123456789012345678901234567890\n");
 		FntPrint(-1, "\n");
 		FntPrint(-1, "ENERGY=%d\n", energy);*/
-		FntPrint(-1, "\n");	
+		FntPrint(-1, "\n");
 		FntPrint(-1, "COUNTER=%d\n", counter);
 		counter++;
-		
+
 		// Update display
 		movePaddle(&paddle_left, (PADTYPE*)padbuff[0]);
 		movePaddle(&paddle_right, (PADTYPE*)padbuff[1]);
@@ -392,6 +392,6 @@ int main(int argc, const char *argv[])
 		if (init_cooldown) init_cooldown--;
 		if (game_start_delay) game_start_delay--;
 	}
-	
+
 	return 0;
 }
