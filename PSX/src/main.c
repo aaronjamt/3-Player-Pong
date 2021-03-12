@@ -58,6 +58,9 @@ void checkCmd() {
 		case 'Q':
 			__asm__("j 0x801ecd94");
 			break;
+                case 'h':
+                case 'H':
+                        printf("Hello? World!\n");
 		case 0xff:
 			break;
 		default:
