@@ -3,22 +3,19 @@ MenuOption:
 ; Top 5 bits = current menu number
 
 MenuOptionsTable:				; Lists all of the menus in order of their ID's
-.dw MainMenu, PaddleModMenu, BallModMenu, ScoreModMenu, DispModMenu, 0
+.dw MainMenu, PaddleModMenu, BallModMenu, 0
 
 MainMenu:					; Lists all options in the menu, followed by null to indicate the end.
 .dw PaddleModOption, BallModOption, ScoreModOption, DispModOption, 0
 
 PaddleModMenu:
-.dw SlowLeftPaddleOption, SlowRightPaddleOption, MainMenuOption, 0
+.dw SlowPaddleOption, BlindPaddleOption, FreezePaddleOption, MainMenuOption, 0
 
 BallModMenu:
-.dw MainMenuOption, 0
-
-ScoreModMenu:
-.dw MainMenuOption, 0
+.dw FastBallOption, SlowBallOption, CrazyBallOption, MainMenuOption, 0
 
 DispModMenu:
-.dw MainMenuOption, 0
+.dw MenuOptionA, MenuOptionB, MenuOptionA, MenuOptionC, MenuOptionD, MenuOptionNext, MenuOptionPrev, 0
 
 ;---------------------------------------------;
 ;                                             ;
@@ -35,21 +32,33 @@ PaddleModOption:
 .dw PaddleModExec
 .db " Paddle Modifiers   ",0
 
-SlowLeftPaddleOption:
-.dw SlowLeftPaddleExec
-.db " Slow Left Paddle   ",0
+SlowPaddleOption:
+.dw SlowPaddleExec
+.db " Slow Paddle        ",0
 
-SlowRightPaddleOption:
-.dw SlowRightPaddleExec
-.db " Slow Right Paddle   ",0
+BlindPaddleOption:
+.dw BlindPaddleExec
+.db " Blind Paddle       ",0
+
+FreezePaddleOption:
+.dw FreezePaddleExec
+.db " Freeze Paddle      ",0
 
 BallModOption:
 .dw BallModExec
 .db " Ball Modifiers     ",0
 
-ScoreModOption:
-.dw ScoreModExec
-.db " Score Modifiers    ",0
+FastBallOption:
+.dw FastBallExec
+.db " Fast Ball          ",0
+
+SlowBallOption:
+.dw SlowBallExec
+.db " Slow Ball          ",0
+
+CrazyBallOption:
+.dw CrazyBallExec
+.db " Crazy Ball         ",0
 
 DispModOption:
 .dw DispModExec
