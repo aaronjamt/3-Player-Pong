@@ -21,10 +21,10 @@ DispModMenu:
 .dw MainMenuOption, 0
 
 ;---------------------------------------------;
-;	                                         		;
+;                                             ;
 ; Place menu options below here. They should  ;
-;       be ASCII and null-terminated.		  		;
-;																							;
+;       be ASCII and null-terminated.         ;
+;                                             ;
 ;---------------------------------------------;
 
 MainMenuOption:
